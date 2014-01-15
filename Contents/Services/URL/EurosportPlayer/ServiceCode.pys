@@ -1,0 +1,29 @@
+def NormalizeURL(url):
+    return url
+
+def MetadataObjectForURL(url):
+    return VideoClipObject(
+            title = "dummy",
+            summary = "fix this"
+            )
+
+def MediaObjectsForURL(url):
+    Log("MediaObjectsForURL")
+    Log(url)
+    return [
+            MediaObject(
+                parts = [PartObject(key=HTTPLiveStreamURL(Callback(PlayHLS, url=url)))]
+                )
+            ]
+
+@indirect
+def PlayHLS(url):
+    playlist = HTTP.Request(url)
+    content = playlist.content
+    cookie = playlist.headers['set-cookie']
+    cookies = HTTP.GetCookiesForURL(url)
+    return IndirectResponse(VideoClipObject,
+            key = HTTPLiveStreamURL(url),
+            http_cookies = cookies
+            )
+

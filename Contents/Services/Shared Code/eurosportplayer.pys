@@ -1,0 +1,44 @@
+import json
+import urllib
+import urllib2
+
+# URLs
+CRM_URL = "https://playercrm.ssl.eurosport.com/JsonPlayerCrmApi.svc/"
+CRM_LOGIN = CRM_URL + "Login"
+
+VERSION = 1
+
+login_data = {"email":"", "password":"", "udid":"8932743294"}
+context = {"v":"1",
+        "s":"1",
+        "d":4,
+        "b":"Plex",
+        "ma":"MrsnugglyBottom",
+        "p":"1",
+        "mn":"Snugglyman",
+        "mi":VERSION,
+        "osn":"Android",
+        "osv":"4.3",
+        "ap":18,
+        "tt":"pad",
+        "di":"dimension:=1920x1128,density=300.00x300.00,scale=1.00x1.00",
+        "l:":"7",
+        "g":"SE"
+        }
+
+def ep_login():
+    Log(Prefs["username"])
+    Log(Prefs["password"])
+
+    login_data["email"] = Prefs["username"]
+    login_data["password"] = Prefs["password"]
+
+    encodedData = urllib.urlencode({"data": json.dumps(login_data), "context" : json.dumps(context)})
+    loginUrl = CRM_LOGIN + "?" + encodedData
+
+    j = JSON.ObjectFromURL(loginUrl)
+    Log(j)
+
+    return j
+
+
