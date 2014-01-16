@@ -1,15 +1,38 @@
+from eurosportplayer import find_current_show as find_current_show
+from eurosportplayer import get_products as get_products
+
+IMAGE_HOST_URL = "http://i.eurosportplayer.se/"
+
 def NormalizeURL(url):
     return url
 
 def MetadataObjectForURL(url):
+    c = find_channel_from_url(url)
+    current_show = find_current_show(c)
+    if current_show:
+        summary = current_show["name"]
+        image = IMAGE_HOST_URL + current_show["picture"]["url"]
+    else:
+        summary = c["channellivelabel"] + ": " + c["channellivesublabel"],
+        image = thumb = IMAGE_HOST_URL + c["vignetteurl"],
+
     return VideoClipObject(
-            title = "dummy",
-            summary = "fix this"
+            title = c["channellabel"],
+            summary = url,
+            thumb = image,
+            url = url
             )
 
+def find_channel_from_url(url):
+    products = get_products()
+    for c in products["PlayerObj"]:
+        for ls in c["livestreams"]:
+            if url == ls["url"]:
+                return c
+    return None
+
 def MediaObjectsForURL(url):
-    Log("MediaObjectsForURL")
-    Log(url)
+    Log("MediaObjectsForURL %s" % url)
     return [
             MediaObject(
                 parts = [PartObject(key=HTTPLiveStreamURL(Callback(PlayHLS, url=url)))]
@@ -18,12 +41,13 @@ def MediaObjectsForURL(url):
 
 @indirect
 def PlayHLS(url):
+    HTTP.ClearCookies()
     playlist = HTTP.Request(url)
     content = playlist.content
-    cookie = playlist.headers['set-cookie']
+    #cookie = playlist.headers['set-cookie']
     cookies = HTTP.GetCookiesForURL(url)
     return IndirectResponse(VideoClipObject,
             key = HTTPLiveStreamURL(url),
-            http_cookies = cookies
+            http_cookies = cookie
             )
 

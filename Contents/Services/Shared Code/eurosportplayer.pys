@@ -1,10 +1,17 @@
+# -*- coding: utf-8 -*
+
 import json
 import urllib
 import urllib2
+import re
+import datetime
 
 # URLs
 CRM_URL = "https://playercrm.ssl.eurosport.com/JsonPlayerCrmApi.svc/"
 CRM_LOGIN = CRM_URL + "Login"
+
+VIDEO_URL = "http://videoshop.ext.eurosport.com/JsonProductService.svc/"
+VIDEO_PRODUCTS = VIDEO_URL + "GetAllProductsByDeviceMobile"
 
 VERSION = 1
 
@@ -25,6 +32,45 @@ context = {"v":"1",
         "l:":"7",
         "g":"SE"
         }
+
+def get_products():
+    user_ref = ep_login()
+
+    dvs = {"userid": user_ref["Id"],
+            "hkey": user_ref["Hkey"],
+            "languageid": 7,
+            "isbroadcasted" : 1,
+            "isfullaccess" : 0
+            }
+    encoded = urllib.urlencode({"data": json.dumps(dvs), "context" : json.dumps(context)})
+    channelsUrl = VIDEO_PRODUCTS + "?" + encoded
+    products = JSON.ObjectFromURL(channelsUrl)
+    return products
+
+def find_current_show(channel):
+    now = datetime.datetime.now()
+
+    if channel["tvschedules"]:
+        for s in channel["tvschedules"]:
+            endtime = convert_date(s["enddate"]["datetime"])
+            starttime = convert_date(s["startdate"]["datetime"])
+            if now < endtime and now >= starttime:
+                return s
+    elif channel["tvscheduleliveevents"]:
+        for s in channel["tvscheduleliveevents"]:
+            endtime = convert_date(s["enddate"]["datetime"])
+            starttime = convert_date(s["startdate"]["datetime"])
+            if now < endtime and now >= starttime:
+                return s
+    return None
+
+date_regex = re.compile("Date\(([0-9]*?)\+([0-9]*?)\)")
+def convert_date(dateString):
+    r = date_regex.search(dateString)
+    (time, offset) = r.groups()
+    time = int(time)
+    time = time / 1000
+    return datetime.datetime.fromtimestamp(time)
 
 def ep_login():
     Log(Prefs["username"])

@@ -8,7 +8,7 @@
 		<dict>
 			<key>URLPatterns</key>
 			<array>
-                <string>^http://esioslive[0-9]?-i.akamaihd.net/hls/.+</string>
+                <string>^http://esioslive[0-9]*-i.akamaihd.net/hls/.+</string>
 			</array>
 		</dict>
 	</dict>
