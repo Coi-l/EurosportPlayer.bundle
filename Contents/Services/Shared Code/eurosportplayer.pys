@@ -15,7 +15,7 @@ VIDEO_PRODUCTS = VIDEO_URL + "GetAllProductsByDeviceMobile"
 
 VERSION = 1
 
-login_data = {"email":"", "password":"", "udid":"8932743294"}
+login_data = {"email":"", "password":"", "udid":"f87a17a2-8040-11e3-ab56-fabae5af4ba6"}
 context = {"v":"1",
         "s":"1",
         "d":4,
@@ -23,7 +23,7 @@ context = {"v":"1",
         "ma":"MrsnugglyBottom",
         "p":"1",
         "mn":"Snugglyman",
-        "mi":VERSION,
+        "mi":"- Plugin version: %s" % VERSION,
         "osn":"Android",
         "osv":"4.3",
         "ap":18,
