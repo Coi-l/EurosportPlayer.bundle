@@ -18,6 +18,9 @@ IMAGE_HOST_URL = "http://i.eurosportplayer.se/"
 TEXT_TITLE = u"Eurosport Player"
 TEXT_CHANNELS = u"Channels"
 
+ICON = "icon-default.png"
+ART = "art-default.png"
+
 unlink = SharedCodeService.eurosportplayer.unlink
 ep_login = SharedCodeService.eurosportplayer.ep_login
 get_products = SharedCodeService.eurosportplayer.get_products
@@ -26,7 +29,9 @@ find_current_show = SharedCodeService.eurosportplayer.find_current_show
 # Initializer called by the framework
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 def Start():
-    pass
+    ObjectContainer.thumb = R(ICON)
+    ObjectContainer.art = R(ART)
+    DirectoryObject.art = R(ART)
 
 # Menu builder methods
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
