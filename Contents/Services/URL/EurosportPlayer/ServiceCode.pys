@@ -18,7 +18,7 @@ def MetadataObjectForURL(url):
 
     return VideoClipObject(
             title = c["channellabel"],
-            summary = url,
+            summary = summary,
             thumb = image,
             url = url
             )
@@ -44,10 +44,10 @@ def PlayHLS(url):
     HTTP.ClearCookies()
     playlist = HTTP.Request(url)
     content = playlist.content
-    #cookie = playlist.headers['set-cookie']
+    cookie = playlist.headers['set-cookie']
     cookies = HTTP.GetCookiesForURL(url)
     return IndirectResponse(VideoClipObject,
-            key = HTTPLiveStreamURL(url),
-            http_cookies = cookie
+            key = HTTPLiveStreamURL(url)
+            #http_cookies = cookies
             )
 
