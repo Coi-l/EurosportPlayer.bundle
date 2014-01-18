@@ -51,7 +51,7 @@ def ListChannels(prevTitle):
         if current_show:
             summary = current_show["name"]
         else:
-            summary = c["channellivelabel"] + ": " + c["channellivesublabel"],
+            summary = c["channellivelabel"] + ": " + c["channellivesublabel"]
 
         url = get_livestream_url(c)
         eo = EpisodeObject(

@@ -13,8 +13,8 @@ def MetadataObjectForURL(url):
         summary = current_show["name"]
         image = IMAGE_HOST_URL + current_show["picture"]["url"]
     else:
-        summary = c["channellivelabel"] + ": " + c["channellivesublabel"],
-        image = thumb = IMAGE_HOST_URL + c["vignetteurl"],
+        summary = c["channellivelabel"] + ": " +  c["channellivesublabel"]
+        image = thumb = IMAGE_HOST_URL + c["vignetteurl"]
 
     return VideoClipObject(
             title = c["channellabel"],
