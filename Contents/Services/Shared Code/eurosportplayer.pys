@@ -2,19 +2,24 @@
 
 import json
 import urllib
-import urllib2
 import re
 import datetime
 
 # URLs
 CRM_URL = "https://playercrm.ssl.eurosport.com/JsonPlayerCrmApi.svc/"
 CRM_LOGIN = CRM_URL + "Login"
+CRM_UNLINK = CRM_URL + "Unlink"
 
 VIDEO_URL = "http://videoshop.ext.eurosport.com/JsonProductService.svc/"
 VIDEO_PRODUCTS = VIDEO_URL + "GetAllProductsByDeviceMobile"
 
 VERSION = 1
 
+#Convert locale id to isolanguagecode
+l2c = {"en":"0", "de":"1", "en-GB":"2", "fr":"3", "it":"4", "nl":"5", "es":"6", "se":"7", "dk":"11", "fi":"12",
+"no":"13", "pl":"14", "ru":"15"}
+
+active_user_ref = {}
 login_data = {"email":"", "password":"", "udid":"f87a17a2-8040-11e3-ab56-fabae5af4ba6"}
 context = {"v":"1",
         "s":"1",
@@ -29,20 +34,38 @@ context = {"v":"1",
         "ap":18,
         "tt":"pad",
         "di":"dimension:=1920x1128,density=300.00x300.00,scale=1.00x1.00",
-        "l:":"7",
-        "g":"se"
+        "l:":l2c[Prefs["lang"]],
+        "g":Prefs["lang"]
         }
 
-def get_products():
-    user_ref = ep_login()
-
-    dvs = {"userid": user_ref["Id"],
-            "hkey": user_ref["Hkey"],
+#userid = user_ref["Id"]
+#hkey = user_ref["Hkey"]
+dvs = {"userid": "",
+            "hkey":"",
             "languageid": 7,
             "isbroadcasted" : 1,
             "isfullaccess" : 0
             }
-    encoded = urllib.urlencode({"data": json.dumps(dvs), "context" : json.dumps(context)})
+
+def get_dvs_context(user_ref):
+    if user_ref:
+        try:
+            dvs["userid"] = user_ref["Id"]
+            dvs["hkey"] = user_ref["Hkey"]
+        except KeyError:
+            pass
+
+    context["l"] = l2c[Prefs["lang"]]
+    context["g"] = Prefs["lang"]
+
+    return (dvs, context)
+
+def get_products():
+    user_ref = ep_login()
+    (d, c) = get_dvs_context(user_ref)
+    #Log(d)
+    #Log(c)
+    encoded = urllib.urlencode({"data": json.dumps(d), "context" : json.dumps(c)})
     channelsUrl = VIDEO_PRODUCTS + "?" + encoded
     products = JSON.ObjectFromURL(channelsUrl)
     return products
@@ -72,19 +95,31 @@ def convert_date(dateString):
     time = time / 1000
     return datetime.datetime.fromtimestamp(time)
 
+def unlink():
+    (d, c) = get_dvs_context(active_user_ref)
+    encoded = urllib.urlencode({"data": json.dumps(c), "context" : json.dumps(c)})
+    unlinkUrl = CRM_UNLINK + "?" + encoded
+    unlinkResult = JSON.ObjectFromURL(unlinkUrl)
+    Log(unlinkResult)
+
 def ep_login():
-    Log(Prefs["username"])
-    Log(Prefs["password"])
+    #Log(Prefs["username"])
+    #Log(Prefs["password"])
 
     login_data["email"] = Prefs["username"]
     login_data["password"] = Prefs["password"]
 
-    encodedData = urllib.urlencode({"data": json.dumps(login_data), "context" : json.dumps(context)})
+    (d, c) = get_dvs_context(None)
+    #Log(login_data)
+    #Log(c)
+    encodedData = urllib.urlencode({"data": json.dumps(login_data), "context" : json.dumps(c)})
     loginUrl = CRM_LOGIN + "?" + encodedData
 
     j = JSON.ObjectFromURL(loginUrl)
     Log(j)
 
+    global active_user_ref
+    active_user_ref = j
     return j
 
 

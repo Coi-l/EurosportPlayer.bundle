@@ -12,15 +12,14 @@ VERSION = "1"
 PREFIX = "/video/eurosportplayer"
 
 # URLs
-CRM_URL = "https://playercrm.ssl.eurosport.com/JsonPlayerCrmApi.svc/"
-CRM_LOGIN = CRM_URL + "Login"
-CMR_UNLINK = CRM_URL + "Unlink"
 IMAGE_HOST_URL = "http://i.eurosportplayer.se/"
 
 #Texts
 TEXT_TITLE = u"Eurosport Player"
 TEXT_CHANNELS = u"Channels"
 
+unlink = SharedCodeService.eurosportplayer.unlink
+ep_login = SharedCodeService.eurosportplayer.ep_login
 get_products = SharedCodeService.eurosportplayer.get_products
 find_current_show = SharedCodeService.eurosportplayer.find_current_show
 
@@ -69,3 +68,7 @@ def ListChannels(prevTitle):
 def get_livestream_url(channel):
     return channel["livestreams"][0]["url"]
 
+
+def ValidatePrefs():
+    unlink()
+    ep_login()
