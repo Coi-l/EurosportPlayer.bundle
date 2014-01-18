@@ -30,7 +30,7 @@ context = {"v":"1",
         "tt":"pad",
         "di":"dimension:=1920x1128,density=300.00x300.00,scale=1.00x1.00",
         "l:":"7",
-        "g":"SE"
+        "g":"se"
         }
 
 def get_products():

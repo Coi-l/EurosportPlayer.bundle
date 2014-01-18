@@ -11,5 +11,12 @@
         "type" : "text",
         "option" : "hidden",
         "default" : ""
+    },
+    {   "id" : "lang",
+        "label" : "Language",
+        "type" : "enum",
+        "values" : ["en", "de", "en-GB", "fr", "it", "nl", "es", "se", "dk", "fi", "no", "pl", "ru"],
+        "default" : "en"
     }
+
 ]
