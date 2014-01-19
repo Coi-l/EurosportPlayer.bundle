@@ -31,6 +31,7 @@ find_current_show = SharedCodeService.eurosportplayer.find_current_show
 def Start():
     ObjectContainer.thumb = R(ICON)
     ObjectContainer.art = R(ART)
+    DirectoryObject.thumb = R(ICON)
     DirectoryObject.art = R(ART)
 
 # Menu builder methods
@@ -39,7 +40,7 @@ def Start():
 def MainMenu():
 
     menu = ObjectContainer(title1=TEXT_TITLE)
-    menu.add((DirectoryObject(key=Callback(ListChannels, prevTitle = TEXT_TITLE), title=TEXT_CHANNELS)))
+    menu.add((DirectoryObject(key=Callback(ListChannels, prevTitle = TEXT_TITLE), title=TEXT_CHANNELS, thumb=R(ICON))))
     menu.add(PrefsObject(title="Preferences"))
 
     Log("Version: %s" % VERSION)
